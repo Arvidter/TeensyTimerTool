@@ -56,7 +56,7 @@ namespace TeensyTimerTool
 
 
 // GPT & PID
-    constexpr bool USE_GPT_PIT_150MHz = false;// changes the clock source for GPT and PIT from 24MHz (standard) to 150MHz, might have side effects!
+    constexpr bool USE_GPT_PIT_150MHz = true;// changes the clock source for GPT and PIT from 24MHz (standard) to 150MHz, might have side effects!
 
 // TCK
     constexpr unsigned NR_OF_TCK_TIMERS = 20; // How many TCK timers shall be available
