@@ -32,6 +32,7 @@ namespace TeensyTimerTool
                 CCM_CSCMR1 |= CCM_CSCMR1_PERCLK_CLK_SEL; // 24MHz
 
             attachInterruptVector(IRQ_PIT, isr);
+            NVIC_CLEAR_PENDING(IRQ_PIT);
             NVIC_ENABLE_IRQ(IRQ_PIT);
         }
 

@@ -41,7 +41,10 @@ namespace TeensyTimerTool
     GptChannel::GptChannel(IMXRT_GPT_t *registers, callback_t *cbStorage)
         : ITimerChannel(cbStorage), regs(registers)
     {
-        clock = (CCM_CSCMR1 & CCM_CSCMR1_PERCLK_CLK_SEL) ? 24 : (F_BUS_ACTUAL / 1000000);
+        // IDK why this does not work...
+        // clock = (CCM_CSCMR1 & CCM_CSCMR1_PERCLK_CLK_SEL) ? 24 : (F_BUS_ACTUAL / 1000000);
+
+        clock = USE_GPT_PIT_150MHz ? 150 : 60;
     }
 
     errorCode GptChannel::begin(callback_t cb, float period, bool periodic)
@@ -99,7 +102,14 @@ namespace TeensyTimerTool
             micros = getMaxPeriod();
             postError(errorCode::periodOverflow);
         }
-        return (uint32_t)(clock * micros) - 1;
+
+        // We need to avoid overflowing when substracting 1
+        float ticks = clock * micros;
+        
+        if (ticks < 1)
+            ticks = 1;
+
+        return (uint32_t)ticks - 1;
     }
 
     float GptChannel::getMaxMicros() const
